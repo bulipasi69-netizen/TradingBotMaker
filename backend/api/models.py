@@ -5,7 +5,7 @@ import jsonfield  # Optional: if you want to store custom JSON. Alternatively, u
 class Bot(models.Model):
     bot_name = models.CharField(max_length=100)
     description = models.CharField(max_length=255, blank=True, null=True)
-    trade_type = models.CharField(max_length=10)  # 'live' or 'backtesting'
+    trade_type = models.CharField(max_length=15)  # 'live' or 'backtesting'
     # Use JSONField for customizations (available in Django 3.1+)
     customizations = models.JSONField(blank=True, null=True)
     infinite_event_id = models.CharField(max_length=100, blank=True, null=True)

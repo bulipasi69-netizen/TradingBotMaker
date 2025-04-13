@@ -6,7 +6,7 @@ function Bots() {
   const [bots, setBots] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/bots')
+    axios.get('http://localhost:8000/api/bots')
       .then(response => {
         setBots(response.data);
       })

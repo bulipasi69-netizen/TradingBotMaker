@@ -29,14 +29,11 @@ function NewBot() {
       trade_type: tradeType,
       customizations: customizations
     };
-    axios.post('http://localhost:5000/api/bots', payload, {
-      headers: {
-        'Content-Type': 'application/json',
-        'X-API-Key': 'your_api_key_here'
-      }
+    axios.post('http://localhost:8000/api/bots/', payload, {
+      headers: { 'Content-Type': 'application/json' }
     })
     .then(response => console.log(response.data))
-    .catch(error => console.error("Error creating bot:", error));    
+    .catch(error => console.error("Error creating bot:", error));     
   };
 
   return (
