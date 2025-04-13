@@ -15,17 +15,27 @@ import os
 from dotenv import load_dotenv
 from corsheaders.defaults import default_headers
 
-load_dotenv()  # loads from a .env file in the project root
+BASE_DIR = Path(__file__).resolve().parent.parent  # Adjust as needed
+load_dotenv(os.path.join(BASE_DIR, '.env'))
+
+COINBASE_API_KEY = os.getenv("COINBASE_API_KEY")
+TOKEN_METRICS_API_KEY = os.getenv("TOKEN_METRICS_API_KEY")
+INFINITE_GAMES_API_KEY = os.getenv("INFINITE_GAMES_API_KEY")
+X_API_KEY = os.getenv("X_API_KEY")
+
+COINBASE_CLIENT_ID = os.getenv("COINBASE_CLIENT_ID")
+COINBASE_CLIENT_SECRET = os.getenv("COINBASE_CLIENT_SECRET")
+COINBASE_REDIRECT_URI = os.getenv("COINBASE_REDIRECT_URI")
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-&5uqv6^j^3sg6hsoza9klujk(+9o6n%x*g$d9up#e*9&leme2a'
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

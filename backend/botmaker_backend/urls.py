@@ -17,12 +17,19 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.http import HttpResponse
+from django.contrib import admin
+from django.urls import path, include
+from api.coinbase_auth import connect_coinbase, coinbase_callback  # adjust path as necessary
+
 
 def index(request):
     return HttpResponse("Welcome to BotMaker Backend API!")
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
-     path('', index)
+    path('coinbase/connect/', connect_coinbase, name='connect-coinbase'),
+    path('coinbase/callback/', coinbase_callback, name='coinbase-callback'),
 ]
+
