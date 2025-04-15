@@ -5,9 +5,14 @@ import os
 from pandas import json_normalize
 from urllib.parse import urlencode
 from typing import Optional, Dict, Any
+from pathlib import Path
+from dotenv import load_dotenv
 
 
 # --- Token Metrics API Integration ---
+
+BASE_DIR = Path(__file__).resolve().parent.parent  # Adjust as needed to point to the project root
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 API_KEY = os.getenv("TOKEN_METRICS_API_KEY")
 
 def tm_API(endpoint: str, payload: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:

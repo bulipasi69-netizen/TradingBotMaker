@@ -2,15 +2,27 @@
 
 import os
 import cbpro  # Coinbase Pro Python client
+from pathlib import Path
+from dotenv import load_dotenv
+
 
 def connect_to_coinbase_pro_testnet():
     """
     Connect to Coinbase Pro Testnet using cbpro.
     Loads API keys from the environment.
     """
+
+    BASE_DIR = Path(__file__).resolve().parent.parent  # Adjust as needed to point to the project root
+    load_dotenv(os.path.join(BASE_DIR, '.env'))
+
     api_key = os.getenv("COINBASE_PRO_API_KEY")
     secret = os.getenv("COINBASE_PRO_API_SECRET")
     passphrase = os.getenv("COINBASE_PRO_PASSPHRASE")
+
+    # Temporary debug prints:
+    print("API Key:", api_key)
+    print("API Secret:", secret)
+    print("Passphrase:", passphrase)
     api_url = "https://api-public.sandbox.pro.coinbase.com"
     auth_client = cbpro.AuthenticatedClient(api_key, secret, passphrase, api_url)
     return auth_client
@@ -39,5 +51,5 @@ if __name__ == "__main__":
         print(account)
     
     # Test order creation:
-    order = create_order(auth_client, product_id="BTC-USD", side="buy", size="0.001", price="10000")
-    print("Order Created:", order)
+    #order = create_order(auth_client, product_id="BTC-USD", side="buy", size="0.001", price="10000")
+   # print("Order Created:", order)

@@ -3,7 +3,7 @@
 import pandas as pd
 from trading.quant_analysis import calculate_EMAs, calculate_portfolio_returns
 from trading.backtesting import simple_backtest
-from trading.live_trading import connect_to_coinbase_pro_testnet, create_order
+from backend.trading.live_trading_coinbase import connect_to_coinbase_pro_testnet, create_order
 
 def run_trading_bot():
     # Step 1: Collect historical data; here we assume the CSV from previous data collection exists.
