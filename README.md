@@ -132,3 +132,12 @@ Below is a complete, single-file copy‑and‑paste version of the setup instruc
 
 ---
 
+4. **TODO**
+   - Fix xscrapper (currently getting unauthenticated error, before the error was the crawlers was able to get data but not build data set because it would never complete)
+   - Check if token metrics api is working again
+   - finish crypto_sentiment
+   - once all parts are working, implement it all together in bot.py
+   - once bot.py is working, implement so that you can make multiple bots 
+   - store the bots in the background
+   - make dashboard see performance of the bots
+   

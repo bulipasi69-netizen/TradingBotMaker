@@ -27,7 +27,7 @@ def calculate_portfolio_returns(data: pd.DataFrame) -> pd.DataFrame:
 
 if __name__ == "__main__":
     # Update the path if necessary.
-    data = pd.read_csv('data/TMdata.csv', parse_dates=['DATE'])
+    data = pd.read_csv('trading/data/TMdata.csv', parse_dates=['DATE'])
     data = calculate_daily_return(data)
     data = calculate_EMAs(data, grade_col='TM_TRADER_GRADE')
     data = calculate_portfolio_returns(data)

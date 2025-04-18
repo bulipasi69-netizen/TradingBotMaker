@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 
 # --- Token Metrics API Integration ---
 
-BASE_DIR = Path(__file__).resolve().parent.parent  # Adjust as needed to point to the project root
+BASE_DIR = Path(__file__).resolve().parent.parent  
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 API_KEY = os.getenv("TOKEN_METRICS_API_KEY")
 

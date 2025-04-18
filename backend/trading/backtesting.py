@@ -11,7 +11,7 @@ def simple_backtest(data: pd.DataFrame) -> float:
     return annual_return
 
 if __name__ == "__main__":
-    data = pd.read_csv('data/TMdata.csv', parse_dates=['DATE'])
+    data = pd.read_csv('trading/data/TMdata.csv', parse_dates=['DATE'])
     data.fillna(method='ffill', inplace=True)
     data['DailyReturnPCT'] = data['Close'] / data['Open'] - 1
     from quant_analysis import calculate_EMAs, calculate_portfolio_returns

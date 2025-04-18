@@ -5,9 +5,12 @@ from trading.quant_analysis import calculate_EMAs, calculate_portfolio_returns
 from trading.backtesting import simple_backtest
 from backend.trading.live_trading_coinbase import connect_to_coinbase_pro_testnet, create_order
 
+
+    #NEED TO CHANGE TO GEMINI TRADING
+
 def run_trading_bot():
     # Step 1: Collect historical data; here we assume the CSV from previous data collection exists.
-    data = pd.read_csv('data/TMdata.csv', parse_dates=['DATE'])
+    data = pd.read_csv('trading/data/TMdata.csv', parse_dates=['DATE'])
     data.fillna(method='ffill', inplace=True)
     
     # Calculate daily return (if not already present)
@@ -26,6 +29,8 @@ def run_trading_bot():
     latest_signal = data.iloc[-1]['Signal']
     auth_client = connect_to_coinbase_pro_testnet()
     product_id = "BTC-USD"
+
+
     
     # For demonstration, use static price levels.
     if latest_signal:

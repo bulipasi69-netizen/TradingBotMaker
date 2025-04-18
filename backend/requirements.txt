@@ -5,9 +5,10 @@ Django==5.2
 django-cors-headers==3.13.0
 djangorestframework==3.14.0
 idna==2.10
+macrocosmos==0.1.4
 matplotlib==3.5.1
 numpy==1.22.0
-pandas==1.4.2
+pandas==2.2.3
 python-binance==1.0.15
 python-dotenv==0.21.0
 requests==2.27.1
