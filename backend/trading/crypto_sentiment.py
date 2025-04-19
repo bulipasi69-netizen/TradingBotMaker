@@ -89,6 +89,5 @@ def analyze_news(input_csv: str, output_csv: str):
     out_df.to_csv(output_csv, index=False)
     print(f"✅ Analysis complete: {output_csv}")
 
-if __name__ == "__main__":
-    
+if __name__ == "__main__": 
     analyze_news('trading/data/sentiment_input.csv', 'trading/data/sentiment_output.csv')

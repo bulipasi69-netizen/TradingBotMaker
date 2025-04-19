@@ -54,12 +54,18 @@ def get_tokens_index() -> None:
 
 # --- Coinbase Pro Testnet Market Data ---
 def get_cpx_testnet_market_data(symbol: str, start_date: str, end_date: str, granularity: int = 86400):
+
+
+
     """
     Retrieve historical candle data from Coinbase Pro Testnet.
     symbol: e.g., 'BTC-USD'
     Dates: in format 'YYYY-MM-DD'
     granularity: in seconds (86400 for daily)
     """
+
+
+
     base_url = f"https://api-public.sandbox.pro.coinbase.com/products/{symbol}/candles"
     params = {
         'start': start_date + "T00:00:00Z",

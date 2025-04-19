@@ -69,17 +69,8 @@ def get_gemini_account_info() -> list:
 
 def create_gemini_order(product: str, side: str, quantity: str, price: str) -> dict:
     """
-    Create a limit order on Gemini Sandbox using the POST /v1/order/new endpoint.
-    The order uses immediate-or-cancel behavior, meaning that if it cannot be filled immediately,
-    any unfilled portion will be canceled rather than held.
-    
-    Parameters:
-      - product: Trading pair (in Gemini's format, e.g., "btcusd" for BTC/USD).
-      - side: "buy" or "sell".
-      - quantity: The order quantity as a string (e.g., "0.001").
-      - price: The limit price as a string (e.g., "20000").
-    
-    Returns a dictionary with the response from Gemini.
+    Create a limit order on Gemini Sandbox using the POST /v1/order/new endpoint
+    with immediate-or-cancel behavior.
     """
     api_key = os.getenv("GEMINI_API_KEY")
     api_secret = os.getenv("GEMINI_API_SECRET")
@@ -88,12 +79,12 @@ def create_gemini_order(product: str, side: str, quantity: str, price: str) -> d
 
     url = "https://api.sandbox.gemini.com/v1/order/new"
     nonce = str(int(time.time() * 1000))
-    
+
     # Retrieve account info to get a valid account name; defaulting to "primary"
     account_info = get_gemini_account_info()
     valid_account = account_info[0].get("account", "primary")
-    
-    # Build the order payload and include the immediate-or-cancel behavior
+
+    # Build the order payload with correct IOC formatting
     payload = {
         "request": "/v1/order/new",
         "nonce": nonce,
@@ -102,10 +93,10 @@ def create_gemini_order(product: str, side: str, quantity: str, price: str) -> d
         "price": price,
         "side": side.lower(),
         "type": "exchange limit",
-        "behavior": "immediate-or-cancel",  # This ensures no residual open orders
-        "account": [valid_account]          # Provided as an array
+        "options": ["immediate-or-cancel"],
+        "account": valid_account
     }
-    
+
     headers = gemini_auth_headers("/v1/order/new", payload, api_key, api_secret)
     response = requests.post(url, headers=headers)
     try:
@@ -115,6 +106,7 @@ def create_gemini_order(product: str, side: str, quantity: str, price: str) -> d
         print("Response text:", response.text)
         raise e
     return response.json()
+
 
 
 def cancel_gemini_order(order_id: str) -> dict:
