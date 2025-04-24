@@ -1,143 +1,86 @@
-# Trading Bot Project
+# Trading Bot Maker
 
-This repository contains a complete trading bot system for cryptocurrency markets. The system performs data collection, quantitative analysis, backtesting, and live trading on Coinbase Pro's sandbox (testnet). It uses a Django backend for the trading logic and a React frontend for the user interface.
-
-> **Note:** This project is configured for testnet/sandbox use only. Do not use real funds.
+Trading Bot Maker is a modular, customizable platform for algorithmic cryptocurrency trading. Designed for both experimentation and educational purposes, it enables users to build, deploy, and monitor trading bots on Coinbase Pro’s sandbox testnet while leveraging market insights from the Token Metrics API.
 
 ---
 
-## Table of Contents
+## 🚀 Key Features
 
-- [Project Overview](#project-overview)
-- [Project Structure](#project-structure)
-- [Setup Instructions](#setup-instructions)
-  - [Backend Setup](#backend-setup)
-  - [Frontend Setup](#frontend-setup)
+- **Custom Bot Configuration**  
+  Create multiple trading bots with adjustable parameters:
+  - **Buy/Sell Thresholds**: Define the Token Metrics trader-grade levels that trigger orders.
+  - **Budget Management**: Allocate a budget per bot; trades deduct from and credit back to the remaining budget.
+  - **Polling & Chart Intervals**: Set how frequently the system fetches grades, updates charts, and evaluates trade signals.
 
+- **Real‑Time Monitoring**  
+  - **Dashboard**: Live price charts annotated with buy/sell markers and an execution log.
+  - **Bots History**: Review past bot runs, performance metrics, and trade details.
 
-
----
-
-## Project Overview
-
-This project implements:
-- **Data Collection:** Retrieves market data from Coinbase Pro Testnet and token metrics from the Token Metrics API.
-- **Quantitative Analysis:** Computes exponential moving averages (EMA) on signals (TM_TRADER_GRADE) to generate buy/sell signals.
-- **Backtesting:** Runs a simple backtest to estimate portfolio returns.
-- **Live Trading (Testnet):** Connects to Coinbase Pro sandbox to execute test orders based on generated signals.
-
-Sensitive API keys and credentials are stored securely in a `.env` file.
+- **Future‑Ready Architecture**  
+  - **Modular Design**: Separate backend, trading logic, and frontend components make it easy to extend functionality.
+  - **API‑Driven**: Swap or add new data sources (e.g., sentiment analysis, investor grades) without overhauling core code.
 
 ---
 
-## Project Structure
-TradingBotMaker/
-├── backend/
-│   ├── manage.py
-│   ├── .env.example         # Sample environment variable file (copy to .env)
-│   ├── requirements.txt     # Python dependencies for the backend
-│   ├── botmaker_backend/    # Django project (settings, urls, wsgi)
-│   │   ├── __init__.py
-│   │   ├── settings.py
-│   │   ├── urls.py
-│   │   └── wsgi.py
-│   ├── api/                 # Django app for API endpoints (Coinbase OAuth etc.)
-│   │   ├── __init__.py
-│   │   ├── models.py
-│   │   ├── serializers.py
-│   │   └── views.py
-│   └── trading/             # Trading bot modules
-│       ├── __init__.py
-│       ├── data_collection.py
-│       ├── quant_analysis.py
-│       ├── backtesting.py
-│       ├── live_trading.py
-│       └── bot.py         # Main orchestration module for trading
-└── frontend/                # React frontend (UI)
-    ├── package.json
-    ├── public/
-    │   └── index.html
-    └── src/
-        ├── index.js
-        ├── App.js
-        └── components/
-            ├── Dashboard.js
-            ├── Bots.js
-            ├── NewBot.js
-            └── ConnectCoinbase.js
+## 🔧 Setup & Installation
 
+**1. Backend**  
+```bash
+cd TradingBotMaker/backend
+python3 -m venv venv         # (macOS/Linux) or python -m venv venv (Windows)
+source venv/bin/activate     # or venv\Scripts\activate on Windows
+pip install -r requirements.txt
+cp .env.example .env         # then edit .env with your API keys
+python manage.py runserver 0.0.0.0:8000
+```
 
-Below is a complete, single-file copy‑and‑paste version of the setup instructions in Markdown. You can save all the text into a file (for example, `SETUP.md`) and share it with your friend.
+**2. Frontend**  
+```bash
+cd ../frontend
+npm install
+npm start                   # Launches React app at http://localhost:3000
+```
 
-```markdown
-# Setup Instructions
-
-## Backend Setup
-
-1. **Clone the Repository:**
-   ```bash
-   git clone <your_repository_url>
-   cd TradingBotMaker/backend
-   ```
-
-2. **Create and Activate a Virtual Environment:**
-
-   **On macOS/Linux:**
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
-
-   **On Windows:**
-   ```bash
-   python -m venv venv
-   venv\Scripts\activate
-   ```
-
-3. **Install Dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Setup Environment Variables:**
-   - Copy the sample `.env.example` file to `.env`:
-     ```bash
-     cp .env.example .env
-     ```
-   - Open the newly created `.env` file and update it with your credentials. 
-  
-
-5. **Run the Django Server:**
-   ```bash
-   python manage.py runserver 0.0.0.0:8000
-   ```
-
-## Frontend Setup
-
-1. **Navigate to the Frontend Folder:**
-   ```bash
-   cd ../frontend
-   ```
-
-2. **Install Node.js Dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Start the React App:**
-   ```bash
-   npm start
-   ```
-   Your app should now run at [http://localhost:3000](http://localhost:3000).
+> **Note:** This project is configured for sandbox use only. Do not use real funds.
 
 ---
 
-4. **TODO**
-   - Fix xscrapper (currently getting unauthenticated error, before the error was the crawlers was able to get data but not build data set because it would never complete)
-   - Check if token metrics api is working again
-   - finish crypto_sentiment
-   - once all parts are working, implement it all together in bot.py
-   - once bot.py is working, implement so that you can make multiple bots 
-   - store the bots in the background
-   - make dashboard see performance of the bots
-   
+## 🛠️ API Usage
+
+### Token Metrics API
+- **Endpoint**: `/v2/trader-grades`  
+- **Purpose**: Retrieves the latest `TM_TRADER_GRADE` for a given token (e.g., Bitcoin)  
+- **Integration**: `data_collection.py` fetches grades, then `quant_analysis.py` computes EMAs and trade signals.
+
+### Coinbase Pro Sandbox
+- **Endpoints**: `/accounts`, `/orders`  
+- **Purpose**: Executes test buy/sell orders based on generated signals  
+- **Integration**: `live_trading.py` manages order placement, budget updates, and error handling.
+
+All sensitive credentials (API keys, secrets) are loaded from the backend’s `.env` file to ensure security.
+
+---
+
+## 🌟 Usage Workflow
+
+1. **Connect Coinbase** (planned): Link your sandbox account via API keys in the Connect page.  
+2. **Build a Bot**: On **New Bot**, configure thresholds, budget, and intervals.  
+3. **Deploy**: Start the bot—watch the live chart populate with buy/sell markers and view logs.  
+4. **Monitor**: Switch to the **Dashboard** to track performance; visit **Bots** to review past runs.
+
+---
+
+## 📈 Project Impact & Roadmap
+
+- **Hands‑On Learning**: Empowers users to experiment with quantitative strategies and understand price dynamics.  
+- **Scalable Platform**: Easily extend support to additional tokens, data feeds (e.g., sentiment scores, investor grades), and advanced analytics.  
+- **Community Collaboration**: Open‑source structure invites contributions—add adapters for new exchanges or visualization enhancements.
+
+**Next Steps:**  
+- Multi‑asset support (e.g., Ethereum, altcoins)  
+- Integration of sentiment and investor‑grade APIs  
+- Production‑grade wallet connection and order management  
+
+---
+
+
