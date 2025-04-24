@@ -13,6 +13,8 @@ BACKEND_DIR = Path(__file__).resolve().parents[1]
 dotenv_path = BACKEND_DIR / ".env"                     
 load_dotenv(dotenv_path=dotenv_path, override=True)
 API_KEY = os.environ["TOKEN_METRICS_API_KEY"] 
+BINANCEUS_API_KEY = os.environ["BINANCEUS_API_KEY"]
+BINANCEUS_API_SECRET = os.environ["BINANCEUS_API_SECRET"]
 # ─── Token Metrics & Trading constants ─────────────────────────────────────────
 TM_API_KEY       = API_KEY
 TOKEN_ID         = 3375          # Bitcoin
@@ -26,8 +28,8 @@ budget           = INITIAL_BUDGET
 
 # ─── Exchange setup (Binance US sandbox) ───────────────────────────────────────
 exchange = ccxt.binanceus({
-    'apiKey': 'V4m8XeEUDdg5EQXBV3Ojfx3RSBWEu0GRq8LaInAIpKWncvcGc8r123K085gqMVQf',
-    'secret': 'cx2bJAZiSVZmrWLPEwSZGTzyn5Hcq5n7a2uJVJNi4Gnm3VhU3RTbaFFwneBLDEq9',
+    'apiKey': BINANCEUS_API_KEY,
+    'secret': BINANCEUS_API_SECRET,
     'enableRateLimit': True,
 })
 exchange.set_sandbox_mode(True)

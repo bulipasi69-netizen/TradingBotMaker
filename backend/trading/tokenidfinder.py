@@ -1,6 +1,13 @@
 import requests
+import os
+from pathlib import Path
+from dotenv import load_dotenv
 
-API_KEY = 'hack-b3f7d3e9-421d-47a3-b4e0-44dca99c0f0d'
+
+BACKEND_DIR = Path(__file__).resolve().parents[1]     
+dotenv_path = BACKEND_DIR / ".env"                     
+load_dotenv(dotenv_path=dotenv_path, override=True)
+API_KEY = os.environ["TOKEN_METRICS_API_KEY"] 
 url     = 'https://api.tokenmetrics.com/v2/tokens'
 headers = {
     'Accept': 'application/json',
