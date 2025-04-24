@@ -10,16 +10,16 @@ from dotenv import load_dotenv
 
 
 # --- Token Metrics API Integration ---
-
-BASE_DIR = Path(__file__).resolve().parent.parent  
-load_dotenv(os.path.join(BASE_DIR, '.env'))
-API_KEY = os.getenv("TOKEN_METRICS_API_KEY")
+BACKEND_DIR = Path(__file__).resolve().parents[1]     
+dotenv_path = BACKEND_DIR / ".env"                     
+load_dotenv(dotenv_path=dotenv_path, override=True)
+API_KEY = os.environ["TOKEN_METRICS_API_KEY"] 
 
 def tm_API(endpoint: str, payload: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     """
     Obtain data from the Token Metrics Data API.
     """
-    base_url = 'https://alpha.data-api.tokenmetrics.com/v1/'
+    base_url = 'https://api.tokenmetrics.com/v2/'
     if payload:
         url = base_url + endpoint + '?' + urlencode(payload)
     else:
@@ -48,7 +48,8 @@ def get_tokens_index() -> None:
     response = tm_API(endpoint)
     coins = json_normalize(response['data'])
     coins = coins.sort_values(by='TOKEN_ID').reset_index(drop=True)
-    filtered = coins[coins.NAME.isin(['Bitcoin', 'Ethereum', 'Litecoin'])]
+    filtered = coins[coins['TOKEN_NAME'].isin(['Bitcoin', 'Ethereum', 'Litecoin'])]
+
     print(filtered)
     
 
@@ -77,6 +78,7 @@ def get_cpx_testnet_market_data(symbol: str, start_date: str, end_date: str, gra
 
 if __name__ == "__main__":
     # For testing purposes:
+    print("Loaded API_KEY:", repr(API_KEY))
     print("Token Metrics Tokens Index:")
     get_tokens_index()
     print("Coinbase Pro Testnet Market Data for BTC-USD:")

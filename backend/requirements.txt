@@ -9,6 +9,7 @@ macrocosmos==0.1.4
 matplotlib==3.5.1
 numpy==1.22.0
 pandas==2.2.3
+plotly==6.0.1
 python-binance==1.0.15
 python-dotenv==0.21.0
 requests==2.27.1

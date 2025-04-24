@@ -32,4 +32,3 @@ urlpatterns = [
     path('coinbase/connect/', connect_coinbase, name='connect-coinbase'),
     path('coinbase/callback/', coinbase_callback, name='coinbase-callback'),
 ]
-

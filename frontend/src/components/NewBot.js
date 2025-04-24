@@ -1,112 +1,164 @@
+// src/components/NewBot.jsx
+
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Typography, TextField, Button, FormControl, InputLabel, Select, MenuItem, Checkbox, FormControlLabel, FormGroup, Card, CardContent, Box } from '@mui/material';
+import {
+  Typography,
+  Button,
+  Card,
+  CardContent,
+  Box,
+  CircularProgress,
+  Link,
+  TextField,
+  Grid
+} from '@mui/material';
 
-function NewBot() {
-  const [botName, setBotName] = useState('');
-  const [description, setDescription] = useState('');
-  const [tradeType, setTradeType] = useState('live');
-  const [customizations, setCustomizations] = useState({
-    x_api: { crypto: false, general: false, sentiment: false },
-    ask_news: false
-  });
+export default function NewBot() {
+  const [isDeploying, setIsDeploying] = useState(false);
+  const [isDeployed, setIsDeployed] = useState(false);
+  const [dashUrl, setDashUrl] = useState('');
 
-  const toggleXAPIOption = (option) => {
-    setCustomizations(prevState => ({
-      ...prevState,
-      x_api: {
-        ...prevState.x_api,
-        [option]: !prevState.x_api[option]
-      }
-    }));
-  };
+  // Dummy option states
+  const [buyThreshold, setBuyThreshold] = useState(80);
+  const [sellThreshold, setSellThreshold] = useState(50);
+  const [initialBudget, setInitialBudget] = useState(1000);
+  const [orderValue, setOrderValue] = useState(100);
+  const [tradeInterval, setTradeInterval] = useState(30);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const payload = {
-      bot_name: botName,
-      description,
-      trade_type: tradeType,
-      customizations: customizations
-    };
-    axios.post('http://localhost:8000/api/bots/', payload, {
+  const deployBot = () => {
+    setIsDeploying(true);
+    setIsDeployed(false);
+
+    axios.post('http://localhost:8000/api/run-trading-bot/', {}, {
       headers: { 'Content-Type': 'application/json' }
     })
-    .then(response => console.log(response.data))
-    .catch(error => console.error("Error creating bot:", error));     
+    .then(response => {
+      const url = response.data.dash_url || 'http://localhost:8050';
+      setDashUrl(url);
+      setIsDeploying(false);
+      setIsDeployed(true);
+    })
+    .catch(error => {
+      console.error("Error deploying trading bot:", error);
+      alert("Error deploying trading bot. Check the console for details.");
+      setIsDeploying(false);
+    });
+  };
+
+  const openDashApp = () => {
+    window.open(dashUrl, '_blank');
   };
 
   return (
     <Card>
-      <CardContent>
+      <CardContent sx={{ maxWidth: 600, margin: 'auto' }}>
         <Typography variant="h4" gutterBottom>
-          Create New Bot
+          Trading Bot Deployment
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <TextField 
-            label="Bot Name" 
-            variant="outlined" 
-            value={botName} 
-            onChange={(e) => setBotName(e.target.value)}
-            required 
-          />
-          <TextField 
-            label="Description" 
-            variant="outlined" 
-            multiline 
-            rows={3} 
-            value={description} 
-            onChange={(e) => setDescription(e.target.value)}
-          />
-          <FormControl fullWidth>
-            <InputLabel id="trade-type-label">Trade Type</InputLabel>
-            <Select
-              labelId="trade-type-label"
-              value={tradeType}
-              label="Trade Type"
-              onChange={(e) => setTradeType(e.target.value)}
+
+        {/* Option fields (dummy) */}
+        <Box component="form" noValidate sx={{ mb: 3 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Buy Threshold"
+                type="number"
+                value={buyThreshold}
+                onChange={e => setBuyThreshold(Number(e.target.value))}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Sell Threshold"
+                type="number"
+                value={sellThreshold}
+                onChange={e => setSellThreshold(Number(e.target.value))}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Initial Budget (USDT)"
+                type="number"
+                value={initialBudget}
+                onChange={e => setInitialBudget(Number(e.target.value))}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Order Value (USDT)"
+                type="number"
+                value={orderValue}
+                onChange={e => setOrderValue(Number(e.target.value))}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Trade Interval (s)"
+                type="number"
+                value={tradeInterval}
+                onChange={e => setTradeInterval(Number(e.target.value))}
+              />
+            </Grid>
+          </Grid>
+        </Box>
+
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          {!isDeployed ? (
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={deployBot}
+              disabled={isDeploying}
+              sx={{ mb: 2 }}
             >
-              <MenuItem value="live">Live Trading</MenuItem>
-              <MenuItem value="backtesting">Backtesting</MenuItem>
-            </Select>
-          </FormControl>
-          <Typography variant="h6">Integrate X API</Typography>
-          <FormGroup row>
-            <FormControlLabel
-              control={
-                <Checkbox 
-                  checked={customizations.x_api.crypto} 
-                  onChange={() => toggleXAPIOption('crypto')} 
-                />
-              }
-              label="Crypto News"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox 
-                  checked={customizations.x_api.general} 
-                  onChange={() => toggleXAPIOption('general')} 
-                />
-              }
-              label="General News"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox 
-                  checked={customizations.x_api.sentiment} 
-                  onChange={() => toggleXAPIOption('sentiment')} 
-                />
-              }
-              label="Sentiment Analysis"
-            />
-          </FormGroup>
-          <Button variant="contained" color="primary" type="submit">
-            Create Bot
-          </Button>
+              {isDeploying ? 'Deploying...' : 'Deploy Trading Bot'}
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              color="success"
+              size="large"
+              onClick={openDashApp}
+              sx={{ mb: 2 }}
+            >
+              View Trading Bot Dashboard
+            </Button>
+          )}
+
+          {isDeploying && (
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <CircularProgress size={24} sx={{ mb: 1 }} />
+              <Typography variant="body2" color="textSecondary">
+                Starting trading bot and preparing visualization...
+              </Typography>
+            </Box>
+          )}
+
+          {isDeployed && (
+            <Box sx={{ mt: 2, textAlign: 'center' }}>
+              <Typography variant="body1" color="success.main" sx={{ mb: 1 }}>
+                Trading bot successfully deployed!
+              </Typography>
+              <Typography variant="body2">
+                It may take a few moments for the dashboard to be ready.
+              </Typography>
+              <Typography variant="body2" sx={{ mt: 1 }}>
+                If the dashboard doesn't open, please try again in a few seconds or visit:
+              </Typography>
+              <Link href={dashUrl} target="_blank" rel="noopener">
+                {dashUrl}
+              </Link>
+            </Box>
+          )}
         </Box>
       </CardContent>
     </Card>
   );
 }
-
-export default NewBot;
